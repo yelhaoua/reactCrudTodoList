@@ -1,9 +1,8 @@
 import { Todos } from "../AllData/Todos";
 import MyInputes from "./myui/MyInputes";
 import { useState } from "react";
-import { InputsContext } from "@/myContext/InputsContext";
+import { FormFunctions, InputsContext } from "@/myContext/InputsContext";
 import ListOfTodos from "./ListTodos";
-import Modale from "./myui/Modal";
 export default function TodoFrom() {
   const [InputsValues, setInputsValues] = useState({
     Todo: "",
@@ -59,17 +58,20 @@ export default function TodoFrom() {
       >
         {Todos.length ? <ListOfTodos /> : null}
         <div>
-          <InputsContext.Provider value={{ ButtoneClick: HandleButtoneClick }}>
-            <MyInputes
-              InputLable={"Enter Your Name"}
-              InputName={"Todo"}
-              Value={InputsValues.Todo}
-              setInputes={HandleInputsChanges}
-            />
-          </InputsContext.Provider>
+          <FormFunctions.Provider value={{ InputesState: InputsValues }}>
+            <InputsContext.Provider
+              value={{ ButtoneClick: HandleButtoneClick }}
+            >
+              <MyInputes
+                InputLable={"Enter Your Name"}
+                InputName={"Todo"}
+                Value={InputsValues.Todo}
+                setInputes={HandleInputsChanges}
+              />
+            </InputsContext.Provider>
+          </FormFunctions.Provider>
         </div>
       </form>
-      {InputsValues.Status && <Modale  Message={InputsValues.Modaletxt}/>}
     </>
   );
 }

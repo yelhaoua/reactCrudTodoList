@@ -1,7 +1,7 @@
 import { InputsContext } from "@/myContext/InputsContext";
 import { useContext } from "react";
 
-export default function MyButton({ className }) {
+export default function MyButton({ className ,  name }) {
   let {ButtoneClick} = useContext(InputsContext);
   return (
     <>
@@ -11,7 +11,7 @@ export default function MyButton({ className }) {
         }}
         className={className}
       >
-        Send
+        {name}
       </button>
     </>
   );
