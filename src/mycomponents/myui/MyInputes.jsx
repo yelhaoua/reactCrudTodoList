@@ -1,14 +1,11 @@
 import { useContext } from "react";
-import MyButton from "./Mybtn";
-import { FormFunctions } from "@/myContext/InputsContext";
+import MyButton from "./AddBtn";
+import { FormFunctions, TodosObject } from "@/myContext/InputsContext";
 import Eroore from "./Errore";
-export default function MyInputes({
-  InputName,
-  InputLable,
-  Value,
-  setInputes,
-}) {
-  let { InputesState } = useContext(FormFunctions);
+import AddBtn from "./AddBtn";
+export default function MyInputes({ InputName, InputLable }) {
+  let { InputesState, FunctionChangeState } = useContext(FormFunctions);
+
   return (
     <>
       <div className="flex flex-col justify-start items-center w-150 ml-auto mr-auto">
@@ -20,15 +17,18 @@ export default function MyInputes({
             <input
               className="flex-1 p-1 hy-5 mr-1 border-blue-300 border-2 rounded-md focus:outline-2 focus:outline-blue-400 focus:border-0"
               onChange={(e) => {
-                setInputes(e);
+                FunctionChangeState(e);
               }}
               type="text"
               name={InputName}
               id={InputLable}
-              value={Value}
+              value={InputesState.Todo}
               placeholder={InputLable}
             />
-            <MyButton name="Send" className="w-fit px-3.5 rounded-md bg-blue-300 text-black py-1.5 duration-200 ease-in hover:bg-blue-400  hover:text-white" />
+            <AddBtn
+              name="Send"
+              className="w-fit px-3.5 rounded-md bg-blue-300 text-black py-1.5 duration-200 ease-in hover:bg-blue-400  hover:text-white"
+            />
           </div>
           {InputesState.Modaletxt && <Eroore />}
         </div>

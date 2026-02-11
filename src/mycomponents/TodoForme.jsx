@@ -1,7 +1,7 @@
 import { Todos } from "../AllData/Todos";
 import MyInputes from "./myui/MyInputes";
 import { useState } from "react";
-import { FormFunctions, InputsContext } from "@/myContext/InputsContext";
+import { FormFunctions, TodosObject } from "@/myContext/InputsContext";
 import ListOfTodos from "./ListTodos";
 export default function TodoFrom() {
   const [InputsValues, setInputsValues] = useState({
@@ -9,18 +9,19 @@ export default function TodoFrom() {
     Modaletxt: "",
     Status: false,
   });
+  const [TodosValues, setTodos] = useState([]);
   function HandleInputsChanges(e) {
     setInputsValues({ ...InputsValues, [e.target.name]: e.target.value });
   }
   function HandleButtoneClick() {
     if (CheckInputsValues()) {
-      let Todo = {
-        id: Todos.length + 1,
+      let todo = {
+        id: crypto.randomUUID(),
         value: InputsValues.Todo,
         status: "w",
       };
-      Todos.push(Todo);
-      console.log(Todos);
+      setTodos((prev) => [...prev, todo]);
+      setInputsValues({ ...InputsValues, Todo: "" });
     }
   }
   function CheckInputsValues() {
@@ -47,6 +48,20 @@ export default function TodoFrom() {
       return true;
     }
   }
+
+  function HandleDeletClick(id) {
+    console.log(TodosValues);
+
+    setTodos((prev) => prev.filter((todo) => todo.id !== id));
+    console.log(TodosValues);
+  }
+  function HandleUpdateClick(id) {
+    console.log(Todos, id);
+  }
+
+  function HandleDoneClick(id) {
+    console.log(Todos, id);
+  }
   return (
     <>
       <h1>React Todo List</h1>
@@ -56,21 +71,25 @@ export default function TodoFrom() {
           e.preventDefault();
         }}
       >
-        {Todos.length ? <ListOfTodos /> : null}
-        <div>
-          <FormFunctions.Provider value={{ InputesState: InputsValues }}>
-            <InputsContext.Provider
-              value={{ ButtoneClick: HandleButtoneClick }}
-            >
-              <MyInputes
-                InputLable={"Enter Your Name"}
-                InputName={"Todo"}
-                Value={InputsValues.Todo}
-                setInputes={HandleInputsChanges}
-              />
-            </InputsContext.Provider>
+        <TodosObject.Provider
+          value={{ SetTodosValues: setTodos, TodosContextValues: TodosValues }}
+        >
+          <FormFunctions.Provider
+            value={{
+              InputesState: InputsValues,
+              FunctionChangeState: HandleInputsChanges,
+              FunctionAddTodo: HandleButtoneClick,
+              FunctionDeletTodo: HandleDeletClick,
+              FunctionUpdateTodo: HandleUpdateClick,
+              FunctionDoneTodo: HandleDoneClick,
+            }}
+          >
+            {TodosValues.length ? <ListOfTodos /> : null}
+            <div>
+              <MyInputes InputLable={"Enter Your Name"} InputName={"Todo"} />
+            </div>
           </FormFunctions.Provider>
-        </div>
+        </TodosObject.Provider>
       </form>
     </>
   );
