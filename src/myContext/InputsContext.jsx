@@ -13,3 +13,8 @@ export let FormFunctions = createContext({
   FunctionDeletTodo: null,
   FunctionDoneTodo: null,
 });
+
+export let ModaleContext = createContext({
+  ModaleContextValue: {},
+  SetModaleCOntextValues: null,
+});

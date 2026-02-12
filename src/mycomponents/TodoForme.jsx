@@ -1,51 +1,45 @@
 import { Todos } from "../AllData/Todos";
 import MyInputes from "./myui/MyInputes";
 import { useState } from "react";
-import { FormFunctions, TodosObject } from "@/myContext/InputsContext";
+import {
+  FormFunctions,
+  TodosObject,
+  ModaleContext,
+} from "@/myContext/InputsContext";
 import ListOfTodos from "./ListTodos";
+import ModalUpdate from "./myui/UpdateModale";
+import AddBtn from "./myui/AddBtn";
+import { CheckInputsValues } from "@/utilitis/check";
+
 export default function TodoFrom() {
+  let [ModaleUpdate, setMdalUpdate] = useState({ statusModal: false });
+
   const [InputsValues, setInputsValues] = useState({
     Todo: "",
     Modaletxt: "",
+    UpdatedTodo: "",
+    UpdatedId: "",
     Status: false,
   });
   const [TodosValues, setTodos] = useState([]);
   function HandleInputsChanges(e) {
     setInputsValues({ ...InputsValues, [e.target.name]: e.target.value });
   }
-  function HandleButtoneClick() {
-    if (CheckInputsValues()) {
+  function HandleAddClick() {
+    if (CheckInputsValues(InputsValues.Todo, setInputsValues)) {
       let todo = {
         id: crypto.randomUUID(),
         value: InputsValues.Todo,
+
         status: "w",
       };
       setTodos((prev) => [...prev, todo]);
-      setInputsValues({ ...InputsValues, Todo: "" });
-    }
-  }
-  function CheckInputsValues() {
-    if (InputsValues.Todo.trim() == "") {
       setInputsValues({
         ...InputsValues,
-        Modaletxt: "Pleas Enter A valide Todo",
-        Status: true,
-      });
-      return false;
-    } else if (InputsValues.Todo.length > 30 || InputsValues.Todo.length <= 3) {
-      setInputsValues({
-        ...InputsValues,
-        Modaletxt: "Todo Must Be Betwen 3 And 30",
-        Status: true,
-      });
-      return false;
-    } else {
-      setInputsValues({
-        ...InputsValues,
+        Todo: "",
         Modaletxt: "",
         Status: false,
       });
-      return true;
     }
   }
 
@@ -55,8 +49,8 @@ export default function TodoFrom() {
     setTodos((prev) => prev.filter((todo) => todo.id !== id));
     console.log(TodosValues);
   }
-  function HandleUpdateClick(id) {
-    console.log(Todos, id);
+  function HandleUpdateClick(e) {
+    console.log(e.target.name, e.target.value);
   }
 
   function HandleDoneClick(id) {
@@ -74,21 +68,38 @@ export default function TodoFrom() {
         <TodosObject.Provider
           value={{ SetTodosValues: setTodos, TodosContextValues: TodosValues }}
         >
-          <FormFunctions.Provider
+          <ModaleContext.Provider
             value={{
-              InputesState: InputsValues,
-              FunctionChangeState: HandleInputsChanges,
-              FunctionAddTodo: HandleButtoneClick,
-              FunctionDeletTodo: HandleDeletClick,
-              FunctionUpdateTodo: HandleUpdateClick,
-              FunctionDoneTodo: HandleDoneClick,
+              ModaleContextValue: ModaleUpdate,
+              SetModaleCOntextValues: setMdalUpdate,
             }}
           >
-            {TodosValues.length ? <ListOfTodos /> : null}
-            <div>
-              <MyInputes InputLable={"Enter Your Name"} InputName={"Todo"} />
-            </div>
-          </FormFunctions.Provider>
+            <FormFunctions.Provider
+              value={{
+                InputesState: InputsValues,
+                FunctionChangeState: HandleInputsChanges,
+                FunctionAddTodo: HandleAddClick,
+                FunctionDeletTodo: HandleDeletClick,
+                FunctionUpdateTodo: HandleUpdateClick,
+                FunctionDoneTodo: HandleDoneClick,
+              }}
+            >
+              {TodosValues.length ? <ListOfTodos /> : null}
+
+              <div className="flex justify-center items-end w-full">
+                <MyInputes
+                  InputLable={"Enter Your Todo"}
+                  InputName={"Todo"}
+                  value={InputsValues.Todo}
+                />
+                <AddBtn
+                  name="Send"
+                  className="w-fit px-3.5 rounded-md bg-blue-300 text-black py-1.5 duration-200 ease-in hover:bg-blue-400  hover:text-white"
+                />
+              </div>
+              {ModaleUpdate.statusModal && <ModalUpdate />}
+            </FormFunctions.Provider>
+          </ModaleContext.Provider>
         </TodosObject.Provider>
       </form>
     </>

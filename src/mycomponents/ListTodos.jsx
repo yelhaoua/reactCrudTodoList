@@ -2,14 +2,17 @@ import { Todos } from "@/AllData/Todos";
 import MyButton from "./myui/AddBtn";
 import { Delete } from "lucide-react";
 import { useContext } from "react";
-import { FormFunctions, TodosObject } from "@/myContext/InputsContext";
+import {
+  FormFunctions,
+  ModaleContext,
+  TodosObject,
+} from "@/myContext/InputsContext";
 import DeleteBtn from "./myui/DeleteBtn";
 import UpdateBtn from "./myui/UpdateBtn";
 import DoneBtn from "./myui/DoneBtn";
 
 export default function ListOfTodos() {
   let { TodosContextValues } = useContext(TodosObject);
-
   let Todo = TodosContextValues.map((el) => {
     return (
       <div key={el.id} className="flex flex-col gap-1">
