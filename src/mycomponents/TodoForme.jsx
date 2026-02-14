@@ -25,23 +25,23 @@ export default function TodoFrom() {
   function HandleInputsChanges(e) {
     setInputsValues({ ...InputsValues, [e.target.name]: e.target.value });
   }
-  function HandleAddClick() {
-    if (CheckInputsValues(InputsValues.Todo, setInputsValues)) {
-      let todo = {
-        id: crypto.randomUUID(),
-        value: InputsValues.Todo,
+  // function HandleAddClick() {
+  //   if (CheckInputsValues(InputsValues.Todo, setInputsValues)) {
+  //     let todo = {
+  //       id: crypto.randomUUID(),
+  //       value: InputsValues.Todo,
 
-        status: "w",
-      };
-      setTodos((prev) => [...prev, todo]);
-      setInputsValues({
-        ...InputsValues,
-        Todo: "",
-        Modaletxt: "",
-        Status: false,
-      });
-    }
-  }
+  //       status: "w",
+  //     };
+  //     setTodos((prev) => [...prev, todo]);
+  //     setInputsValues({
+  //       ...InputsValues,
+  //       Todo: "",
+  //       Modaletxt: "",
+  //       Status: false,
+  //     });
+  //   }
+  // }
 
   function HandleDeletClick(id) {
     console.log(TodosValues);
